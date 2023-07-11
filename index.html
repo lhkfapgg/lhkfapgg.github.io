@@ -4,36 +4,88 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./vue.js"></script>
     <title>书</title>
     <style>
-
+        body {
+            font-size: 20px;
+        }
+        .seel:hover {
+            background-color: skyblue;
+        }
     </style>
 </head>
+<!-- ————————— -->
+<!-- 〉　丨 -->
 <body>
-    <h1>书</h1>
-    <hr>
-    <ul>
-        <li><a href="#t20230707">七七</a></li>
-        <li><a href="#t20230708">七八</a></li>
-        <li><a href="#t20230709">七九</a></li>
-        
-    </ul>
-    <hr>
-    <div>
-        <div id="t20230707">
-            <h3>七七</h3>
-            <p>—————————#</p>
+    <div id="root">
+        <h1>书</h1>
+        <L></L>
+        <ul>
+            <li>七七</li>
+            <li>七八</li>
+            <li>七九</li>
+        </ul>
+        <L></L>
+        <div class="text">
+            <div v-for="t in text" :key="t.id">
+                <h3>{{t.title}}</h3>
+                <p>{{t.time}}</p>
+                <p>{{t.content}}</p>
+            </div>
         </div>
-        <div id="t20230708">
-            <h3>七八</h3>
-            <p>—————————#</p>
+        <L></L>
+        <div class="see">
+            <span v-for="i in 3":style="seestyle(i)">{{see_(i)}}<span class="seel"@click="seeclick(i)">丨</span></span>
         </div>
-        <div id="t20230709">
-            <h3>七九</h3>
-            <p>—————————#</p>
-        </div>
+        <L></L>
+        <footer>二〇二三七七</footer>
     </div>
-    <hr>
-    <footer>二〇二三七七</footer>
 </body>
+<script>
+
+
+const L={
+    template:`<div>————————————————————————————————————～</div>`
+}
+
+const App={
+    components:{},
+    template:`<div>
+        <L></L>
+    </div>`
+}
+
+Vue.component('L',L)
+
+new Vue({
+    el:'#root',
+    components:{App},
+    data:{
+        text:[
+            {
+                id:'001',
+                time:'20230707',
+                title:'七七',
+                content:'城壁一中天悬剑上午没事杨璐杨戬冷战上海人地工我人有经眼和和让'
+            }
+        ],
+        see:1
+    },
+    computed:{
+    },
+    methods:{
+        see_(i){
+            return i===1?'':'———'
+        },
+        seestyle(i){
+            return i<=this.see?{color:'#f00'}:{}
+        },
+        seeclick(i){
+            this.see=i
+        }
+    }
+})
+</script>
+
 </html>
