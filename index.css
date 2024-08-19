@@ -1,0 +1,135 @@
+* {
+  font-family: sans-serif;
+}
+
+html {
+  font-size: 16px;
+  font-family: sans-serif;
+  color: #fff;
+  background: #000;
+}
+
+/* 方块 */
+block {
+
+  &,
+  &>show,
+  &>show>item {
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+    position: relative;
+  }
+
+  &>show {
+    cursor: pointer;
+
+    &>item {
+      &.null {
+        background: #0000;
+      }
+
+      &.water {
+        background: #00f;
+      }
+
+      &.glass {
+        background: #0f0;
+      }
+
+      &.flower {
+        background: #f88;
+      }
+
+      &.sand {
+        background: #ff0;
+      }
+
+      &.soil {
+        background: #d90;
+      }
+
+      &.stone {
+        background: #aaa;
+      }
+    }
+  }
+}
+
+/* 手持 */
+hand {
+  display: block;
+  height: 4rem;
+  text-align: center;
+  align-content: center;
+
+  &>block {
+    margin: 4px;
+
+    &>show {
+      &>item {
+        outline: solid 1px #fff;
+      }
+
+      &>item[choose] {
+        outline: double 6px #fff;
+      }
+
+      &>num {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        color: #fff;
+        text-shadow: 1px 1px 1px #000,
+          1px -1px 1px #000,
+          -1px 1px 1px #000,
+          -1px -1px 1px #000;
+      }
+    }
+  }
+}
+
+/* 区块 */
+chunk {
+  display: block;
+  height: 38rem;
+  width: 38rem;
+  margin: auto;
+
+  &>block {
+    display: block;
+    float: left;
+  }
+}
+
+/* 实体 */
+entries {
+
+  &>block,
+  &>block>show,
+  &>block>show>item {
+    display: block;
+    height: 1.6rem;
+    width: 1.6rem;
+  }
+
+  &>block {
+    position: absolute;
+    right: 0.2rem;
+    bottom: 0.2rem;
+
+    &>show {
+      &>item {
+        &.cloud {
+          background: #ffffffaa;
+        }
+
+        &.fish {
+          height: 1rem;
+          width: 1rem;
+          background: #94a406aa;
+        }
+      }
+    }
+  }
+}
