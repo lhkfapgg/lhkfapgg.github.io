@@ -2,7 +2,9 @@
   font-family: sans-serif;
 }
 
-html {
+html,
+body {
+  margin: 0;
   font-size: 16px;
   font-family: sans-serif;
   color: #fff;
@@ -10,81 +12,30 @@ html {
 }
 
 /* block */
-.block,
 block {
-  display: inline-block;
-  height: 2rem;
-  width: 2rem;
 
-  &>show {
-    position: relative;
-
-    &,
-    &>item {
-      display: inline-block;
-      height: 2rem;
-      width: 2rem;
-      cursor: pointer;
-      text-align: center;
-      align-content: center;
-
-      &[choose] {
-        outline: dashed 3px #fff;
-      }
-    }
-
-    &>num {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-    }
+  &,
+  &>item,
+  &>item>show {
+    display: block;
+    height: 2rem;
+    width: 2rem;
+    outline: solid 2px #999;
+    cursor: pointer;
+    text-align: center;
+    align-content: center;
   }
 }
-
-.blocks,
-blocks {
-  display: block;
-  text-align: center;
-  align-content: center;
-}
-
 
 /* tool */
 tool {
-  height: 4rem;
-  margin: auto;
-  position: absolute;
+  display: block;
+  margin: 1rem;
 
-  &>block>show {
-    outline: auto;
+  & block {
+    margin: 0.3rem;
   }
-}
-
-.-tool-start {
-  background: #000000;
 }
 
 /* hand */
-hand {
-  height: 4rem;
-  margin: auto;
-
-  &>block {
-    margin: 2px;
-    outline: solid #999 1px;
-  }
-
-}
-
 /* chunk */
-chunk {
-  height: 38rem;
-  width: 38rem;
-  margin: auto;
-  outline: auto;
-
-  & block {
-    outline: auto;
-    float: left;
-  }
-}
