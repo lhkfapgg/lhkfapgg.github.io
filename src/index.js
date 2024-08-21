@@ -10,8 +10,8 @@ export default $`@index`($/*html*/`
   <chunk></chunk>
 `({
   tool: Tool(),
-  hand: Hand({ size: 9 }),
-  chunk: Chunk(),
+  hand: Hand({ size: 10 }),
+  chunk: Chunk({ height: 11, width: 11 }),
 })/*css*/`
 
 `)

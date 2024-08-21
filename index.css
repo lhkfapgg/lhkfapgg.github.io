@@ -13,6 +13,28 @@ body {
 
 /* block */
 block {
+  & {
+    ::selection {
+      color: #000;
+      background: #fff;
+    }
+
+    .-item-water {
+      background: #00f;
+    }
+
+    .-item-soil {
+      background: #d90;
+    }
+
+    .-item-stone {
+      background: #aaa;
+    }
+
+    .-item-sand {
+      background: #ff0;
+    }
+  }
 
   &,
   &>item,
@@ -20,45 +42,86 @@ block {
     display: block;
     height: 2rem;
     width: 2rem;
-    outline: solid 2px #999;
     cursor: pointer;
-    text-align: center;
-    align-content: center;
+
+    &,
+    &~info {
+      text-align: center;
+      align-content: center;
+    }
+  }
+
+  &>item>info {
+    display: none;
+    min-height: 2rem;
+    min-width: 2rem;
+    margin: 1rem;
+    position: fixed;
+    top: 0;
+    right: 0;
+    outline: solid 2px #999;
+  }
+
+  &:hover {
+    outline: solid 2px #999;
+
+    &>item>info {
+      display: block;
+    }
   }
 }
 
-blocks {
+/* blocks */
+:has(>blocks) {
   display: block;
+  width: fit-content;
+  margin: auto;
+
+  &>blocks {
+    display: flex;
+  }
 }
 
 /* tool */
 tool {
-  display: block;
   margin: 1rem;
   position: absolute;
   top: 0;
   left: 0;
 
-  & block {
-    margin: 0.3rem;
+  &>blocks {
+    flex-direction: column;
+
+    &>block {
+      margin: 0.3rem;
+
+      &>item:hover>info {
+        display: none;
+      }
+    }
   }
 }
 
 /* hand */
 hand {
-  display: block;
-  width: fit-content;
   margin: 1rem auto;
 
-
-  & block {
-    display: inline-block;
+  &>blocks>block {
+    position: relative;
     margin: 0.2rem;
+    outline: solid 2px #999;
 
-    & show[choose] {
+    &>item[choose] {
       outline: dashed 0.2rem #fff;
+    }
+
+    &>n {
+      position: absolute;
+      bottom: 0;
+      right: 0;
     }
   }
 }
 
 /* chunk */
+chunk {}
