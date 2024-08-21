@@ -20,7 +20,8 @@ const COMMON = {
     '<>': `<item></item>`
   },
   item: {
-    '<>': `<show class={id} submit={submit}></show>`,
+    '<>': `<show class={id} choose={choose} submit={submit}></show>`,
+    choose:false,
     submit: false
   }
 }

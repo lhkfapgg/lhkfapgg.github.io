@@ -27,10 +27,17 @@ block {
   }
 }
 
+blocks {
+  display: block;
+}
+
 /* tool */
 tool {
   display: block;
   margin: 1rem;
+  position: absolute;
+  top: 0;
+  left: 0;
 
   & block {
     margin: 0.3rem;
@@ -38,4 +45,20 @@ tool {
 }
 
 /* hand */
+hand {
+  display: block;
+  width: fit-content;
+  margin: 1rem auto;
+
+
+  & block {
+    display: inline-block;
+    margin: 0.2rem;
+
+    & show[choose] {
+      outline: dashed 0.2rem #fff;
+    }
+  }
+}
+
 /* chunk */

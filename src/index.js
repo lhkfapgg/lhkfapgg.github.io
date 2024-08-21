@@ -6,8 +6,12 @@ import Chunk from './Chunk.js'
 
 export default $`@index`($/*html*/`
   <tool></tool>
+  <hand></hand>
+  <chunk></chunk>
 `({
   tool: Tool(),
+  hand: Hand({ size: 9 }),
+  chunk: Chunk(),
 })/*css*/`
 
 `)
