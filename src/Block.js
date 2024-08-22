@@ -18,7 +18,7 @@ export default function Block({ id, item, ...ar } = {}) {
 // 通用属性
 const COMMON = {
   block: {
-    '<>': `<item></item>`
+    '<>': `<item -></item>`
   },
   item: {
     '<>': `
@@ -26,7 +26,19 @@ const COMMON = {
       <info></info>
     `,
     choose: false,
-    submit: false
+    submit: false,
+    $toget: ({ }) => ({ from, to }) => {
+      if (from.item.id !== '-item-null') return
+
+      [from.item, to.item] = [to.item, from.item]
+      from.n++
+    },
+    $get: ({ }) => ({ from, to }) => {
+      if (from.item.id !== to.item.id) return
+
+      to.item = Block({ id: '-item-null' }).item
+      from.n++
+    },
   }
 }
 
@@ -35,17 +47,34 @@ const ITEMS = new Map([
   [
     '-item-null',
     () => ({
-      info: '空'
+      info: '空',
+      $get: null,
+      $toget: null,
+      $toset: ({ }) => ({ from, to }) => {
+        if (from.item.id === '-item-null') return
+
+        to.item = from.item
+        from.n--
+        if (from.n > 0) return
+
+        from.item = Block({ id: '-item-null' }).item
+        from.n = 0
+      },
     })
   ], [
     '-item-water',
     () => ({
-      info: '水'
+      info: '水',
     })
   ], [
     '-item-soil',
     () => ({
       info: '土',
+    })
+  ], [
+    '-item-glass',
+    () => ({
+      info: '草',
     })
   ], [
     '-item-stone',

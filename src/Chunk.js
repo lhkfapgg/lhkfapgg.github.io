@@ -2,7 +2,7 @@ import $ from '../public/tree.js'
 import Block from "./Block.js"
 
 export default ({ height, width } = {}) => $`
-  <box $Hchunk handle="submit">
+  <box $get contextmenu="$set" handle="submit">
     <blocks>
       <block submit="block"></block>
     </blocks>
@@ -14,11 +14,16 @@ export default ({ height, width } = {}) => $`
   $init: ({ height: h, width: w }) => ({ height = h, width = w }) => ({
     'box-': Fbox({ height, width })
   }),
-  $Hchunk: ({ }) => ({ handle: { valueO, valueList: [key] } }) => {
+  $get: ({ box }) => ({ handle: { valueO, valueList: [key] } }) => {
     switch (key) {
       case 'block':
-        console.log(valueO);
-
+        $`@index`({ hand: { $get: { to: valueO, box } } })
+    }
+  },
+  $set: ({ box }) => ({ handle: { valueO, valueList: [key] } }) => {
+    switch (key) {
+      case 'block':
+        $`@index`({ hand: { $set: { to: valueO, box } } })
     }
   },
 })()
@@ -30,7 +35,7 @@ function Fbox({ height = 19, width = 19 }) {
   const arr = [...Array(height)]
     .map((_, i) => [...Array(width)]
       .map((_, j) => {
-        return Block({ id: ids[R(ids.length)] })
+        return Block({ id: ids[R(ids.length)], position: [i, j] })
       })
     )
 

@@ -131,7 +131,7 @@ function over(t, k, v, get) {
       }
     }
     else {
-      for (const [key, re] of Object.entries(v)) $.call(t)(key)(re)
+      for (const [key, re] of Object.entries(v ?? {})) $.call(t)(key)(re)
       // 渲染
       const _o = t[_O]
       if (!OPS.has(t) && _o?.es?.size) {

@@ -26,6 +26,9 @@ block {
     .-item-soil {
       background: #d90;
     }
+    .-item-glass{
+      background: #0f0;
+    }
 
     .-item-stone {
       background: #aaa;
