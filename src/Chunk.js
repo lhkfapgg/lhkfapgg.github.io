@@ -11,6 +11,7 @@ export default ({ height, width } = {}) => $`
   height,
   width,
   box: Fbox({ height, width }),
+  entries: new Set(),
   $init: ({ height: h, width: w }) => ({ height = h, width = w }) => ({
     'box-': Fbox({ height, width })
   }),
@@ -25,6 +26,9 @@ export default ({ height, width } = {}) => $`
       case 'block':
         $`@index`({ hand: { $set: { to: valueO, box } } })
     }
+  },
+  $entry: ({ id, item, block, ...ar }) => ({ o: chunk }) => {
+    Fentry({ id, item, block, chunk, ...ar })
   },
 })()
 
@@ -45,4 +49,9 @@ function Fbox({ height = 19, width = 19 }) {
 // 生成随机整数
 function R(n) {
   return Math.floor(Math.random() * n)
+}
+
+// 生成实体
+function Fentry({ id, item, block, chunk, ...ar } = {}) {
+
 }

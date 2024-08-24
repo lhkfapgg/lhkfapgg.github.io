@@ -26,7 +26,8 @@ block {
     .-item-soil {
       background: #d90;
     }
-    .-item-glass{
+
+    .-item-glass {
       background: #0f0;
     }
 
@@ -62,11 +63,11 @@ block {
     position: fixed;
     top: 0;
     right: 0;
-    outline: solid 2px #999;
+    outline: solid 0.1rem #999;
   }
 
   &:hover {
-    outline: solid 2px #999;
+    outline: solid 0.1rem #999;
 
     &>item>info {
       display: block;
@@ -112,16 +113,19 @@ hand {
   &>blocks>block {
     position: relative;
     margin: 0.2rem;
-    outline: solid 2px #999;
+    outline: solid 0.1rem #999;
 
     &>item[choose] {
-      outline: dashed 0.2rem #fff;
+      outline: dashed 0.3rem #fff;
     }
 
     &>n {
       position: absolute;
       bottom: 0;
       right: 0;
+      text-shadow:
+        0 0 0.1rem #000,
+        0.1rem 0.1rem #000;
     }
   }
 }
