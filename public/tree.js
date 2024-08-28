@@ -200,7 +200,7 @@ async function attr(e, o) {
       case 'value': {
         const v = value && await $.call(o)(value)({ e }, 'get')
         if (T(v) === 'boolean') e.toggleAttribute(name, v)
-        else e.setAttribute(name, v ?? value)
+        else e.setAttribute(name, v ?? '')
         continue
       }
       case 'input': {
@@ -623,9 +623,14 @@ function FattrInit(p) {
   for (const e of p.children) {
     let slot_
     const _e = e[_E] = { attrInit: [] }
-    const [k, kk, slot] = [':', '::', 'slot'].map(name => e.getAttribute(name))
+    const [k, kk, a] = [':', '::', '@'].map(name => e.getAttribute(name))
+    let slot = e.getAttribute('slot')
 
     if (k !== null) _e.k = k
+    else if (a !== null) {
+      _e.k = `@${kk}`
+      slot ??= ''
+    }
     else if (kk !== null) _e.k = e instanceof HTMLUnknownElement ? kk : ''
 
     if (slot !== null) {
@@ -634,7 +639,7 @@ function FattrInit(p) {
     }
 
     for (const name of ['handle', 'init', 'index', '!', '_', '-']) if (e.hasAttribute(name)) _e[name] = e.getAttribute(name)
-    for (const name of ['::', ':', 'handle', 'init', 'index', 'slot', '!', '_', '-']) e.removeAttribute(name)
+    for (const name of [':', '::', '@', '~', 'slot', 'handle', 'init', 'index', '!', '_', '-']) e.removeAttribute(name)
 
     _e.attrA = Array.from([...e.attributes], ({ name, value }) => {
       e.removeAttribute(name)
