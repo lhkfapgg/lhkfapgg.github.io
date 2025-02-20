@@ -40,8 +40,8 @@ $._O = _O
 $._E = _E
 
 // 主函数 $
-function $(k) {
-  if (T(k) === 'array') k = k[0]
+function $(k, ...ar) {
+  if (T(k) === 'array') k = raw_(k, ...ar)
   const t = this
   const { [k[0]]: f = F.default } = F
 
@@ -52,11 +52,15 @@ function $(k) {
 
 // 主函数 xos
 function xos(t, x, o) {
-  return s => {
-    if (T(s) === 'array') s = s[0]
-    if (x !== undefined) o['<>'] ??= x
-    if (s !== undefined) o['#'] ??= s
-    if (T(t) === 'element') el(t, '', o)
+  return (s, ...ar) => {
+    if (T(s) === 'array') s = raw_(s, ...ar)
+    if (x) o['<>'] ??= x
+    if (s) o['#'] ??= s
+
+    const tt = T(t)
+    if (tt === 'element') el(t, '', o)
+    else if (tt === 'string') el(document.querySelector(t), '', o)
+
     return o
   }
 }
@@ -80,14 +84,17 @@ function over(t, k, v, get) {
   else {
     if (k) {
       // 后缀
-      const [m, k_, _x] = /(.*?)([\^_-]*)$/.exec(k)
+      const [m, k_, x] = /(.*?)([\^_-]*)$/.exec(k)
+      let _x = x
       if (_x) { k = k_ }
       const val = t[k]
       if (val === v) return val
       if (_x === '_' && val !== undefined) return val
 
-      switch (T(val)) {
-        case 'array':
+      const [tval, tv] = [T(val), T(v)]
+      switch (tval) {
+        case 'array': {
+          if (tv === 'object') _x = 'o'
           switch (_x) {
             default:
             case '':
@@ -111,6 +118,9 @@ function over(t, k, v, get) {
                 if (i !== -1) val.splice(i, 1)
               }
               break
+            case 'o':
+              Object.entries(v).map(([i, o]) => v[i] = o)
+              break
           }
           // 渲染
           const _o = val[_O]
@@ -126,9 +136,13 @@ function over(t, k, v, get) {
             _o.type = null
           }
           return val
+        }
         case 'object': if (_x !== '-') return over(val, '', v)
         default: return t[k] = v
       }
+    }
+    else if (T(v) === 'array') {
+      return v.map(([t, k = '', v, get] = []) => $.call(t)(k)(v, get))
     }
     else {
       for (const [key, re] of Object.entries(v ?? {})) $.call(t)(key)(re)
@@ -195,7 +209,7 @@ async function attr(e, o) {
   _e.attrO = o
 
   for (const attr_ of _e.attrA) {
-    const { name, value, kind } = attr_
+    const { kind, name, value } = attr_
     switch (kind) {
       case 'value': {
         const v = value && await $.call(o)(value)({ e }, 'get')
@@ -216,6 +230,17 @@ async function attr(e, o) {
         const re = {}
         for (const { name, value } of attr_.value) re[name] = $.call(o)(value)({ e }, 'get')
         over(_e.slot, '', re)
+        continue
+      }
+      case 'class': {
+        const [str, classA] = attr_.value
+        e.className = str + ' ' + Array.from(classA, ({ kind, name, value }) => {
+          switch (kind) {
+            case 'value': return value
+            case 'or': return $.call(o)(value)({ e }, 'get') ? name : ''
+            case 'name': return $.call(o)(name)({ e }, 'get')
+          }
+        }).join(' ')
         continue
       }
       case 'ele': {
@@ -253,7 +278,6 @@ async function el(e, k, o) {
     return
   }
   else {
-
     if (o === undefined) return
 
     if ('!' in _e) {
@@ -345,9 +369,20 @@ async function el(e, k, o) {
         switch (_x) {
           case '': return e.append(...Farr(v, e))
           case '^': return e.prepend(...Farr(v, e))
-          case '--':
-            for (const c of Farr(v, e)) c.remove()
-            return
+          case '--': return Farr(v, e).forEach(c => c.remove())
+          case 'o': {
+            const m = Object.entries(v)
+            const newcs = m.map(([, o]) => Farr([o], e)[0])
+
+            return m.map(([i]) => {
+              const oldc = Farr([o[i]], e)[0]
+              let cm
+              oldc?.parentElement?.replaceChild(cm = document.createComment(i), oldc)
+
+              return cm
+            })
+              .forEach((cm, n) => cm?.parentElement?.replaceChild(newcs[n], cm))
+          }
           case '-':
           default: return e.replaceChildren(...Farr(o, e))
         }
@@ -366,6 +401,11 @@ function T(o) {
   if (o instanceof Promise) return 'promise'
   if (o instanceof Element) return 'element'
   return 'object'
+}
+
+// 标签模板
+function raw_(raw, ...ar) {
+  return String.raw({ raw }, ...ar)
 }
 
 // fetch
@@ -618,14 +658,40 @@ function Fslot(e) {
   if (slotA.length) return { kind: 'slot', value: slotA }
 }
 
+// class
+function Fclass(e, classList) {
+  let str = ''
+  const classA = Array.from([...classList], c => {
+    if (!c.includes('{')) {
+      str += c
+      return
+    }
+
+    const [m, is, n, k] = /((.+)[:])?[{](.+)[}]/.exec(c) || []
+    if (!m) return
+
+    classList.remove(c)
+    return is ?
+      { kind: 'or', name: n, value: k } :
+      { kind: 'name', name: k }
+  }).filter(Boolean)
+
+  if (classA.length) return { kind: 'class', value: [str, classA] }
+}
+
 // attr初始化
 function FattrInit(p) {
   for (const e of p.children) {
-    let slot_
     const _e = e[_E] = { attrInit: [] }
     const [k, kk, a] = [':', '::', '@'].map(name => e.getAttribute(name))
+
+    // class slot
+    let class_
+    let slot_
+    let { classList } = e
     let slot = e.getAttribute('slot')
 
+    // : ::
     if (k !== null) _e.k = k
     else if (a !== null) {
       _e.k = `@${kk}`
@@ -633,9 +699,13 @@ function FattrInit(p) {
     }
     else if (kk !== null) _e.k = e instanceof HTMLUnknownElement ? kk : ''
 
+    // class slot
     if (slot !== null) {
       slot_ = Fslot(e)
       e.replaceChildren()
+    }
+    if (classList !== null) {
+      class_ = Fclass(e, classList)
     }
 
     for (const name of ['handle', 'init', 'index', '!', '_', '-']) if (e.hasAttribute(name)) _e[name] = e.getAttribute(name)
@@ -686,6 +756,7 @@ function FattrInit(p) {
       return e.setAttribute(name, value)
     }).filter(Boolean)
 
+    if (class_) _e.attrA.push(class_)
     if (slot_) _e.attrA.push(slot_)
 
     FattrInit(e)
