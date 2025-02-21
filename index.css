@@ -132,3 +132,25 @@ hand {
 
 /* chunk */
 chunk {}
+
+/* page r */
+r {
+  display: block;
+  border-bottom: solid 1px #fff;
+  padding: 0 0 0 1rem;
+
+  & block {
+    display: inline-block;
+    margin: 1rem 1rem 1rem 0;
+  }
+}
+
+page {
+  position: relative;
+
+  &.simple {
+    & h1{
+      text-align: center;
+    }
+  }
+}

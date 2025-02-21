@@ -1,20 +1,21 @@
-import $ from '../public/tree.js'
-import Block from './Block.js'
-import Tool from './Tool.js'
-import Hand from './Hand.js'
-import Chunk from './Chunk.js'
+import pages from "./pages/index.js"
 
-export default $`@index`($/*html*/`
-  <tool init="$init"></tool>
-  <hand></hand>
-  <chunk></chunk>
+export default $`
+  <r $h handle='submit'>
+    <block>
+      <txt submit='{name}'></txt>
+    </block>
+  </r>
+  <page - class='{key}'></page>
 `({
-  tool: Tool(),
-  hand: Hand({ size: 10 }),
-  chunk: Chunk({ height: 11, width: 11 }),
-  $init: ({ }) => ({ e }) => {
-    e.parentElement.addEventListener('contextmenu', (event) => event.preventDefault())
-  }
-})/*css*/`
-
-`)
+  pages,
+  key: $`~page`() || 'simple',
+  r: pages.map(({ name, txt }) => ({
+    name,
+    txt,
+  })),
+  page: ({ pages, key }) => pages.find(p => p.name === key).page,
+  $h: ({ }) => ({ handle: { valueList: [key] } }) => ({
+    key: $`~page`(key)
+  })
+})``

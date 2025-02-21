@@ -1,5 +1,3 @@
-import $ from '../public/tree.js'
-
 export default function Block({ id, item, ...ar } = {}) {
   const item_ = id ? Block.get(id)?.({ id, item, ...ar }) : null
 

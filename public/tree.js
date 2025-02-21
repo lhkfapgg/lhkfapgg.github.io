@@ -234,7 +234,7 @@ async function attr(e, o) {
       }
       case 'class': {
         const [str, classA] = attr_.value
-        e.className = str + ' ' + Array.from(classA, ({ kind, name, value }) => {
+        e.className = str + (str && ' ') + Array.from(classA, ({ kind, name, value }) => {
           switch (kind) {
             case 'value': return value
             case 'or': return $.call(o)(value)({ e }, 'get') ? name : ''
@@ -663,7 +663,7 @@ function Fclass(e, classList) {
   let str = ''
   const classA = Array.from([...classList], c => {
     if (!c.includes('{')) {
-      str += c
+      str = str + (str && ' ') + c
       return
     }
 

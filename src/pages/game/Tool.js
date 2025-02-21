@@ -1,4 +1,3 @@
-import $ from '../public/tree.js'
 import Block from "./Block.js"
 
 export default () => $`
