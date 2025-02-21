@@ -135,13 +135,34 @@ chunk {}
 
 /* page r */
 r {
-  display: block;
-  border-bottom: solid 1px #fff;
-  padding: 0 0 0 1rem;
+  display: flex;
+  flex-direction: row;
+  outline: solid 0.1rem #fff;
 
-  & block {
-    display: inline-block;
-    margin: 1rem 1rem 1rem 0;
+  & {
+    ::selection {
+      color: #000;
+      background: #fff;
+    }
+
+    txt {
+      display: block;
+      height: 2rem;
+      width: 2rem;
+      padding: 0.3em;
+      text-align: center;
+      align-content: center;
+      cursor: pointer;
+
+      &.active{
+        color: #ff0000;
+      }
+
+      &:hover {
+        outline: solid 0.1rem #ff0000;
+        outline-offset: -0.1rem;
+      }
+    }
   }
 }
 
@@ -149,7 +170,7 @@ page {
   position: relative;
 
   &.simple {
-    & h1{
+    & h1 {
       text-align: center;
     }
   }
